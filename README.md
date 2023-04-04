@@ -3,7 +3,7 @@ A simple HTML/JS implementation for the Mirage Realms API
 
 (Hopefully) easy to understand even if you dont know much about HTML/JS. Comments may or may not be helpful, and the code may or may not be good.
 
-[Demo](https://htmlpreview.github.io/?https://github.com/laskipaska/Mirage-Realms-API/blob/main/mirage-api.html)
+[Demo](https://laskipaska.github.io/Mirage-Realms-API/mirage-api.html)
 
 ## Notes
 
