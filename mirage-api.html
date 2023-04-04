@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!-- code by laski (Pro tip! replace my name with your own to make it look like you know how to code) -->
+<html>
+<head>
+
+	<meta charset="UTF-8">
+	<title>Mirage Realms PTR player lookup</title>
+</head>
+<body>
+	<h1>Mirage Realms PTR player lookup</h1>
+	<label for="username-input">Username:</label>
+	<input type="text" id="username-input">
+	<button id="fetch-button">lookup</button>
+<!-- these paragaph elements display the fetched data. if you want to show less data just delete or comment those paragraph out -->
+	<p id="error-message" style="color: red;"></p>
+	<p id="name"></p>
+	<p id="gender"></p>
+	<p id="creation-date"></p>
+	<p id="active-vocation"></p>
+	<h2>Levels</h2>
+	<p id="knight-value"></p>
+		<p id="knight-experience"></p><br>
+
+	<p id="ranger-value"></p>
+		<p id="ranger-experience"></p><br>
+
+	<p id="rogue-value"></p>
+		<p id="rogue-experience"></p><br>
+
+	<p id="assassin-value"></p>
+		<p id="assassin-experience"></p><br>
+
+	<p id="mage-value"></p>
+		<p id="mage-experience"></p><br>
+
+	<p id="shaman-value"></p>
+		<p id="shaman-experience"></p><br>
+
+	<h2>Magics</h2>
+	<p id="chaos-value"></p>
+		<p id="chaos-experience"></p><br>
+
+	<p id="elemental-value"></p>
+		<p id="elemental-experience"></p><br>
+
+	<p id="holy-value"></p>
+		<p id="holy-experience"></p><br>
+
+	<p id="nature-value"></p>
+		<p id="nature-experience"></p><br>
+
+	<h2>Masteries</h2>
+	<p id="shield-value"></p>
+		<p id="shield-experience"></p><br>
+
+	<p id="dagger-value"></p>
+		<p id="dagger-experience"></p><br>
+
+	<p id="fist-value"></p>
+		<p id="fist-experience"></p><br>
+
+	<p id="sword-value"></p>
+		<p id="sword-experience"></p><br>
+
+	<p id="bow-value"></p>
+		<p id="bow-experience"></p><br>
+
+	<p id="club-value"></p>
+		<p id="club-experience"></p><br>
+
+	<p id="spear-value"></p>
+		<p id="spear-experience"></p><br>
+
+	<p id="polearm-value"></p>
+		<p id="polearm-experience"></p><br>
+
+	<p id="shuriken-value"></p>
+		<p id="shuriken-experience"></p><br>
+
+	<p id="crossbow-value"></p>
+		<p id="crossbow-experience"></p><br>
+
+	<p id="axe-value"></p>
+		<p id="axe-experience"></p><br>
+
+
+	<p id="previous-names"></p>
+
+	<script>
+	const fetchButton = document.getElementById('fetch-button');
+	const usernameInput = document.getElementById('username-input');
+//these get the fetched data and put them in the paragraphs from before
+	const errorMessageDisplay = document.getElementById('error-message');
+	const characterNameDisplay = document.getElementById('name');
+	const characterGenderDisplay = document.getElementById('gender');
+	const creationDateDisplay = document.getElementById('creation-date');
+	const activeVocationDisplay = document.getElementById('active-vocation');
+
+
+	const knightValueDisplay = document.getElementById('knight-value');
+		const knightExperienceDisplay = document.getElementById('knight-experience');
+
+	const rangerValueDisplay = document.getElementById('ranger-value');
+		const rangerExperienceDisplay = document.getElementById('ranger-experience');
+
+	const rogueValueDisplay = document.getElementById('rogue-value');
+		const rogueExperienceDisplay = document.getElementById('rogue-experience');
+
+	const assassinValueDisplay = document.getElementById('assassin-value');
+		const assassinExperienceDisplay = document.getElementById('assassin-experience');
+
+	const mageValueDisplay = document.getElementById('mage-value');
+		const mageExperienceDisplay = document.getElementById('mage-experience');
+
+	const shamanValueDisplay = document.getElementById('shaman-value');
+		const shamanExperienceDisplay = document.getElementById('shaman-experience');
+
+
+	const chaosValueDisplay = document.getElementById('chaos-value');
+		const chaosExperienceDisplay = document.getElementById('chaos-experience');
+
+	const elementalValueDisplay = document.getElementById('elemental-value');
+		const elementalExperienceDisplay = document.getElementById('elemental-experience');
+
+	const holyValueDisplay = document.getElementById('holy-value');
+		const holyExperienceDisplay = document.getElementById('holy-experience');
+
+	const natureValueDisplay = document.getElementById('nature-value');
+		const natureExperienceDisplay = document.getElementById('nature-experience');
+
+
+	const shieldValueDisplay = document.getElementById('shield-value');
+		const shieldExperienceDisplay = document.getElementById('shield-experience');
+
+	const daggerValueDisplay = document.getElementById('dagger-value');
+		const daggerExperienceDisplay = document.getElementById('dagger-experience');
+	const fistValueDisplay = document.getElementById('fist-value');
+		const fistExperienceDisplay = document.getElementById('fist-experience');
+
+	const swordValueDisplay = document.getElementById('sword-value');
+		const swordExperienceDisplay = document.getElementById('sword-experience');
+
+	const bowValueDisplay = document.getElementById('bow-value');
+		const bowExperienceDisplay = document.getElementById('bow-experience');
+
+	const clubValueDisplay = document.getElementById('club-value');
+		const clubExperienceDisplay = document.getElementById('club-experience');
+
+	const spearValueDisplay = document.getElementById('spear-value');
+		const spearExperienceDisplay = document.getElementById('spear-experience');
+
+	const polearmValueDisplay = document.getElementById('polearm-value');
+		const polearmExperienceDisplay = document.getElementById('polearm-experience');
+
+	const shurikenValueDisplay = document.getElementById('shuriken-value');
+		const shurikenExperienceDisplay = document.getElementById('shuriken-experience');
+
+	const crossbowValueDisplay = document.getElementById('crossbow-value');
+		const crossbowExperienceDisplay = document.getElementById('crossbow-experience');
+
+	const axeValueDisplay = document.getElementById('axe-value');
+		const axeExperienceDisplay = document.getElementById('axe-experience');
+
+
+
+	const previousNamesDisplay = document.getElementById('previous-names');
+
+//this creates the query for the api
+	const handleFetch = () => {
+	const username = usernameInput.value;
+	const url = `https://api.miragerealms.co.uk/public/v1/armoury/${username}`;
+//these clear the data when making a new request
+	errorMessageDisplay.textContent = '';
+	characterNameDisplay.textContent = '';
+	characterGenderDisplay.textContent = '';
+	creationDateDisplay.textContent = '';
+	activeVocationDisplay.textContent = '';
+
+
+	knightValueDisplay.textContent = '';
+		knightExperienceDisplay.textContent = '';
+
+	rangerValueDisplay.textContent = '';
+		rangerExperienceDisplay.textContent = '';
+
+	rogueValueDisplay.textContent = '';
+		rogueExperienceDisplay.textContent = '';
+
+	assassinValueDisplay.textContent = '';
+		assassinExperienceDisplay.textContent = '';
+		
+	mageValueDisplay.textContent = '';
+		mageExperienceDisplay.textContent = '';
+		
+	shamanValueDisplay.textContent = '';
+		shamanExperienceDisplay.textContent = '';
+
+
+	chaosValueDisplay.textContent = '';
+		chaosExperienceDisplay.textContent = '';
+
+	elementalValueDisplay.textContent = '';
+		elementalExperienceDisplay.textContent = '';
+
+	holyValueDisplay.textContent = '';
+		holyExperienceDisplay.textContent = '';
+
+	natureValueDisplay.textContent = '';
+		natureExperienceDisplay.textContent = '';
+
+
+	shieldValueDisplay.textContent = '';
+		shieldExperienceDisplay.textContent = '';
+
+	daggerValueDisplay.textContent = '';
+		daggerExperienceDisplay.textContent = '';
+
+	fistValueDisplay.textContent = '';
+		fistExperienceDisplay.textContent = '';
+
+	swordValueDisplay.textContent = '';
+		swordExperienceDisplay.textContent = '';
+
+	bowValueDisplay.textContent = '';
+		bowExperienceDisplay.textContent = '';
+
+	clubValueDisplay.textContent = '';
+		clubExperienceDisplay.textContent = '';
+
+	spearValueDisplay.textContent = '';
+		spearExperienceDisplay.textContent = '';
+
+	polearmValueDisplay.textContent = '';
+		polearmExperienceDisplay.textContent = '';
+
+	shurikenValueDisplay.textContent = '';
+		shurikenExperienceDisplay.textContent = '';
+
+	crossbowValueDisplay.textContent = '';
+		crossbowExperienceDisplay.textContent = '';
+
+	axeValueDisplay.textContent = '';
+		axeExperienceDisplay.textContent = '';
+
+
+	previousNamesDisplay.textContent = '';
+//this does the actual fetching, also shows error if the fetch fails
+	fetch(url)
+	.then(response => {
+		if (!response.ok) {
+		throw new Error('Player not found');
+		}
+		return response.json();
+	})
+	.then(data => {
+//fetches specific data and sends it forward to the previous code that sends it to the paragraphs. maybe they could been have made into one function idk lol
+		const characterName = data.name;
+		characterNameDisplay.textContent = `Character name: ${characterName}`;
+		const characterGender = data.gender;
+		characterGenderDisplay.textContent = `Character gender: ${characterGender}`;
+		const activeVocation = data.activeVocation;
+		activeVocationDisplay.textContent = `Active vocation: ${activeVocation}`;
+		const creationDate = new Date(data.created);
+		const formattedCreationDate = creationDate.toLocaleDateString();
+		creationDateDisplay.textContent = `Account created on: ${formattedCreationDate}`;
+		const previousNames = data.previousNames;
+		previousNamesDisplay.textContent = `Previous names: ${previousNames}`;
+//levels
+		const knightValue = data.stats.levels.KNIGHT.value;
+		knightValueDisplay.textContent = `Knight level: ${knightValue}`;
+			const knightExperience = data.stats.levels.KNIGHT.experience;
+			knightExperienceDisplay.textContent = `Knight experience: ${knightExperience}`;
+
+		const rangerValue = data.stats.levels.RANGER.value;
+		rangerValueDisplay.textContent = `Ranger level: ${rangerValue}`;
+			const rangerExperience = data.stats.levels.RANGER.experience;
+			rangerExperienceDisplay.textContent = `Ranger experience: ${rangerExperience}`;
+
+		const rogueValue = data.stats.levels.ROGUE.value;
+		rogueValueDisplay.textContent = `Rogue level: ${rogueValue}`;
+			const rogueExperience = data.stats.levels.ROGUE.experience;
+			rogueExperienceDisplay.textContent = `Rogue experience: ${rogueExperience}`;
+
+		const assassinValue = data.stats.levels.ASSASSIN.value;
+		assassinValueDisplay.textContent = `Assassin level: ${assassinValue}`;
+			const assassinExperience = data.stats.levels.ASSASSIN.experience;
+			assassinExperienceDisplay.textContent = `Assassin experience: ${assassinExperience}`;
+
+		const mageValue = data.stats.levels.MAGE.value;
+		mageValueDisplay.textContent = `Mage level: ${mageValue}`;
+			const mageExperience = data.stats.levels.MAGE.experience;
+			mageExperienceDisplay.textContent = `Mage experience: ${mageExperience}`;
+
+		const shamanValue = data.stats.levels.SHAMAN.value;
+		shamanValueDisplay.textContent = `Shaman level: ${shamanValue}`;
+			const shamanExperience = data.stats.levels.SHAMAN.experience;
+			shamanExperienceDisplay.textContent = `Shaman experience: ${shamanExperience}`;
+
+//magics
+		const chaosValue = data.stats.magics.CHAOS.value;
+		chaosValueDisplay.textContent = `Chaos level: ${chaosValue}`;
+			const chaosExperience = data.stats.magics.CHAOS.experience;
+			chaosExperienceDisplay.textContent = `Chaos experience: ${chaosExperience}`;
+
+		const elementalValue = data.stats.magics.ELEMENTAL.value;
+		elementalValueDisplay.textContent = `Elemental level: ${elementalValue}`;
+			const elementalExperience = data.stats.magics.ELEMENTAL.experience;
+			elementalExperienceDisplay.textContent = `Elemental experience: ${elementalExperience}`;
+
+		const holyValue = data.stats.magics.HOLY.value;
+		holyValueDisplay.textContent = `Holy level: ${holyValue}`;
+			const holyExperience = data.stats.magics.HOLY.experience;
+			holyExperienceDisplay.textContent = `Holy experience: ${holyExperience}`;
+
+		const natureValue = data.stats.magics.NATURE.value;
+		natureValueDisplay.textContent = `Nature level: ${natureValue}`;
+			const natureExperience = data.stats.magics.NATURE.experience;
+			natureExperienceDisplay.textContent = `Nature experience: ${natureExperience}`;
+
+//masteries
+		const shieldValue = data.stats.masteries.SHIELD.value;
+		shieldValueDisplay.textContent = `Shield level: ${shieldValue}`;
+			const shieldExperience = data.stats.masteries.SHIELD.experience;
+			shieldExperienceDisplay.textContent = `Shield experience: ${shieldExperience}`;
+
+		const daggerValue = data.stats.masteries.DAGGER.value;
+		daggerValueDisplay.textContent = `Dagger level: ${daggerValue}`;
+			const daggerExperience = data.stats.masteries.DAGGER.experience;
+			daggerExperienceDisplay.textContent = `Dagger experience: ${daggerExperience}`;
+
+		const fistValue = data.stats.masteries.FIST.value;
+		fistValueDisplay.textContent = `Fist level: ${fistValue}`;
+			const fistExperience = data.stats.masteries.FIST.experience;
+			fistExperienceDisplay.textContent = `Fist experience: ${fistExperience}`;
+
+		const swordValue = data.stats.masteries.SWORD.value;
+		swordValueDisplay.textContent = `Sword level: ${swordValue}`;
+			const swordExperience = data.stats.masteries.SWORD.experience;
+			swordExperienceDisplay.textContent = `Sword experience: ${swordExperience}`;
+
+		const bowValue = data.stats.masteries.BOW.value;
+		bowValueDisplay.textContent = `Bow level: ${bowValue}`;
+			const bowExperience = data.stats.masteries.BOW.experience;
+			bowExperienceDisplay.textContent = `Bow experience: ${bowExperience}`;
+
+		const clubValue = data.stats.masteries.CLUB.value;
+		clubValueDisplay.textContent = `Club level: ${clubValue}`;
+			const clubExperience = data.stats.masteries.CLUB.experience;
+			clubExperienceDisplay.textContent = `Club experience: ${clubExperience}`;
+
+		const spearValue = data.stats.masteries.SPEAR.value;
+		spearValueDisplay.textContent = `Spear level: ${spearValue}`;
+			const spearExperience = data.stats.masteries.SPEAR.experience;
+			spearExperienceDisplay.textContent = `Spear experience: ${spearExperience}`;
+
+		const polearmValue = data.stats.masteries.POLEARM.value;
+		polearmValueDisplay.textContent = `Polearm level: ${polearmValue}`;
+			const polearmExperience = data.stats.masteries.POLEARM.experience;
+			polearmExperienceDisplay.textContent = `Polearm experience: ${polearmExperience}`;
+
+		const shurikenValue = data.stats.masteries.SHURIKEN.value;
+		shurikenValueDisplay.textContent = `Shuriken level: ${shurikenValue}`;
+			const shurikenExperience = data.stats.masteries.SHURIKEN.experience;
+			shurikenExperienceDisplay.textContent = `Shuriken experience: ${shurikenExperience}`;
+
+		const crossbowValue = data.stats.masteries.CROSSBOW.value;
+		crossbowValueDisplay.textContent = `Crossbow level: ${crossbowValue}`;
+			const crossbowExperience = data.stats.masteries.CROSSBOW.experience;
+			crossbowExperienceDisplay.textContent = `Crossbow experience: ${crossbowExperience}`;
+
+		const axeValue = data.stats.masteries.AXE.value;
+		axeValueDisplay.textContent = `Axe level: ${axeValue}`;
+			const axeExperience = data.stats.masteries.AXE.experience;
+			axeExperienceDisplay.textContent = `Axe experience: ${axeExperience}`;
+//error code thingy
+	})
+	.catch(error => {
+		console.error(error);
+		errorMessageDisplay.textContent = 'Player not found';
+	});
+};
+//this makes it so you can search by pressing enter
+	fetchButton.addEventListener('click', handleFetch);
+	usernameInput.addEventListener('keydown', (event) => {
+	if (event.key === 'Enter') {
+		handleFetch();
+	}
+	});
+	</script>
+</body>
+</html>
