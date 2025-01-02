@@ -1,3 +1,5 @@
+# <ins>**NOTE: The API doesn't exist anymore. Keepin' this up just incase its reintroduced.**</ins>
+
 # Mirage-Realms-API
 A simple HTML/JS implementation for the Mirage Realms API
 
